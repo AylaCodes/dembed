@@ -68,7 +68,7 @@ class Dembed:
                     if item in self.file_list:
                         # File was deleted, remove it from list
                         self.file_list.remove(item)
-                        return
+                        continue
 
                     self.file_list.append(item)
                     self.generate_html(item)
