@@ -2,7 +2,8 @@
 Simple watchdog to monitor a folder and create discord-embeddable html files for images.
 
 The script checks every provided poll_rate (Default 1 second) if a new image has been
-detected, and if so, creates the html files from the provided jinja2 template.
+detected, and if so, creates the html files from the provided jinja2 template using
+replacement variables from `main.json`.
 
 Usage:
 
@@ -11,6 +12,7 @@ Usage:
 
 import time
 import sys
+import json
 
 from typing import List
 from pathlib import Path
@@ -29,11 +31,12 @@ class Dembed:
         extensions: A list of file extensions which will trigger the generator.
         template: The jinja2 template to use for generating html files.
     """
-    def __init__(self, directory: Path, poll_rate: int = 1):
+    def __init__(self, directory: Path, poll_rate: int = 1, vars: dict = {}):
         self._first_run: bool = True
         self._environment = Environment(loader=FileSystemLoader("templates"))
         self.directory: Path = directory
         self.poll_rate: int = int(poll_rate)
+        self.vars: dict = vars
         self.monitor: bool = False
         self.file_list: list[Path] = []
         self.extensions = [".jpg", ".png", ".jpeg"]
@@ -48,7 +51,7 @@ class Dembed:
     def generate_html(self, file: Path) -> None:
         """Generates html file for given `file` using `Dembed.template`"""
         with open(f"{file.with_suffix('')}.html", "w") as html:
-            html.write(self.template.render(file_name=file.name))
+            html.write(self.template.render(file_name=file.name, **self.vars))
 
     def run_monitor(self) -> None:
         """Starts the watchdog"""
@@ -97,7 +100,9 @@ def main() -> None:
         print("No or invalid poll_rate provided, setting poll rate to 1 second.")
         poll_rate = 1
 
-    watchdog = Dembed(Path(sys.argv[1]), sys.argv[2])
+    vars = json.loads(Path("./templates/main.json").read_text())
+
+    watchdog = Dembed(Path(sys.argv[1]), sys.argv[2], vars)
     watchdog.run_monitor()
 
 if __name__ == "__main__":

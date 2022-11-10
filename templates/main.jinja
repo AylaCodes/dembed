@@ -1,15 +1,14 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Wolfie Space - {{ file_name }}</title>
-        <meta property="og:url" content="https://wolfie.space"/>
-        <meta property="og:title" content="Wolfie shared an image with you!"/>
-        <meta property="og:description" content="Take a look:"/>
-        <meta property="og:image" content="https://wolfie.space/images/{{ file_name }}"/>
-        <meta property="og:footer" content="Isn't it cool?"/>
+        <title>{{ site_name }} - {{ file_name }}</title>
+        <meta property="og:url" content="{{ base_url }}"/>
+        <meta property="og:title" content="{{ title }}"/>
+        <meta property="og:description" content="{{ description }}"/>
+        <meta property="og:image" content="{{ base_url }}/{{ image_folder }}/{{ file_name }}"/>
+        <meta property="og:type" content="article"/>
         <meta data-react-helmet="true" name="theme-color" content="#A967CE"/>
         <meta name="twitter:card" content="summary_large_image"/>
-        <meta property="og:type" content="website"/>
-        <meta http-equiv="Refresh" content="0; url='https://wolfie.space/images/{{ file_name }}'"/>
+        <meta http-equiv="Refresh" content="0; url='{{ base_url }}/{{ image_folder }}/{{ file_name }}'"/>
     </head>
 </html>
