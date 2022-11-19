@@ -8,4 +8,4 @@ However, I am open to suggestions for improvements or fixes to help others via g
 
 Documentation included within the source file as docstrings.
 
-Uses: Python 3.6+, jinja2
+Uses: Python 3.6+, jinja2, Pillow

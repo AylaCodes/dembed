@@ -18,6 +18,7 @@ from typing import List
 from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader
+from PIL import Image
 
 class Dembed:
     """
@@ -41,6 +42,19 @@ class Dembed:
         self.file_list: list[Path] = []
         self.extensions = [".jpg", ".png", ".jpeg"]
         self.template = self._environment.get_template("main.jinja")
+
+    def convert_jpg(self, image_path: Path) -> Path:
+        """Convert a jpg image to PNG, deleting the original."""
+        image = Image.open(image_path)
+
+        new_path = image_path
+        new_path.replace(image_path.with_suffix(".png"))
+
+        image.save(image_path)
+        image.close()
+        image_path.unlink()
+
+        return new_path
 
     def get_contents(self) -> List[Path]:
         """Returns a list of files from the `Dembed.directory`"""
@@ -71,6 +85,10 @@ class Dembed:
                     if item in self.file_list:
                         # File was deleted, remove it from list
                         self.file_list.remove(item)
+                        continue
+
+                    if item.suffix == ".jpg":
+                        item = self.convert_jpg(item)
                         continue
 
                     self.file_list.append(item)
